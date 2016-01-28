@@ -33,11 +33,19 @@ class HTTPResponse(object):
         self.body = body
 
 class HTTPClient(object):
-    #def get_host_port(self,url):
+
+    def get_host_port(self,url):
+	return None
+
+    def get_host(self,url):
+	
+	return None	
 
     def connect(self, host, port):
         # use sockets!
-        return None
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((host, port))
+        return s
 
     def get_code(self, data):
         return None
@@ -77,8 +85,13 @@ class HTTPClient(object):
             return self.GET( url, args )
     
 if __name__ == "__main__":
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client = HTTPClient()
     command = "GET"
+    host = client.get_host(sys.argv[2])
+    port = client.get_host_port(sys.argv[2])
+    client.connect(host, port)
+    response = client.recvall(sock)
     if (len(sys.argv) <= 1):
         help()
         sys.exit(1)
