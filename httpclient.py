@@ -36,7 +36,6 @@ class HTTPClient(object):
 	
     
     httpRequest = "http/1.1 \r\n"
-    httpHost = "Host: "
     user = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0\r\n"
     accept = "Accept: text/html,application/xhtml+xml,application/xml,application/json\r\n"
     accept_lan = "Accept-Language: en-US,en;q=0.5\r\n"
@@ -57,7 +56,7 @@ class HTTPClient(object):
 	if (self.url_parse.group(2) is None):
 		raise Exception("invalid url")
 	else:
-		self.host_name = "Host: " + self.url_parse.group(2)
+		self.host_name = self.url_parse.group(2)
 	return self.host_name
 
     def get_path(self, url):
@@ -102,7 +101,7 @@ class HTTPClient(object):
 	self.port_number = self.get_host_port(url)
 	self.path = self.get_path(url)
 
-	self.request = "GET /" + self.path + httpRequest + host_name + ":" + self.port_number + "\r\n" + user + accept + accept_lan + connection
+	self.request = "GET /" + self.path + httpRequest + "Host " + host_name + ":" + self.port_number + "\r\n" + user + accept + accept_lan + connection
 	sock = self.connect(self.host_name, self.port_number)
 	sock.sendall(self.request)
 	self.response = self.recvall(sock)
