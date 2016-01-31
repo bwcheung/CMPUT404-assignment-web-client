@@ -35,8 +35,8 @@ class HTTPResponse(object):
 class HTTPClient(object):
 	
     
-    request = "http/1.1 "
-    hostName = "Host: "
+    httpRequest = "http/1.1 \r\n"
+    httpHost = "Host: "
     user = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0\r\n"
     accept = "Accept: text/html,application/xhtml+xml,application/xml,application/json\r\n"
     accept_lan = "Accept-Language: en-US,en;q=0.5\r\n"
@@ -57,8 +57,17 @@ class HTTPClient(object):
 	if (self.url_parse.group(2) is None):
 		raise Exception("invalid url")
 	else:
-		self.host_name = self.url_parse.group(2)
+		self.host_name = "Host: " + self.url_parse.group(2)
 	return self.host_name
+
+    def get_path(self, url):
+	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
+	if (self.url_parse.group(2) is None):
+		return None
+	else:
+		self.path = self.url_parse.group(4)
+		return self.path
+
 
     def connect(self, host, port):
         # use sockets!
@@ -88,6 +97,17 @@ class HTTPClient(object):
         return str(buffer)
 
     def GET(self, url, args=None):
+	
+	self.host_name = self.get_host(url)
+	self.port_number = self.get_host_port(url)
+	self.path = self.get_path(url)
+
+	self.request = "GET /" + self.path + httpRequest + host_name + ":" + self.port_number + "\r\n" + user + accept + accept_lan + connection
+	sock = self.connect(self.host_name, self.port_number)
+	sock.sendall(self.request)
+	self.response = self.recvall(sock)
+	
+
         code = 500
         body = ""
         return HTTPResponse(code, body)
@@ -112,7 +132,7 @@ if __name__ == "__main__":
     print(host)
     print(port)
     client.connect(host, port)
-    #response = client.recvall(sock)
+    response = client.recvall(sock)
     if (len(sys.argv) <= 1):
         help()
         sys.exit(1)
