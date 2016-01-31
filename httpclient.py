@@ -75,13 +75,18 @@ class HTTPClient(object):
         return ClientSocket
 
     def get_code(self, data):
-        return None
+        sections = data.split('\r\n\r\n')
+        header_lines = str.splitlines(sections[0])
+        http_line = header_lines[0].split()
+        return int(http_line[1])
 
     def get_headers(self,data):
-        return None
+        sections = data.split('\r\n\r\n')
+        return sections[0]
 
     def get_body(self, data):
-        return None
+        sections = data.split('\r\n\r\n')
+        return sections[1]
 
     # read everything from the socket
     def recvall(self, sock):
@@ -101,14 +106,14 @@ class HTTPClient(object):
 	self.port_number = self.get_host_port(url)
 	self.path = self.get_path(url)
 
-	self.request = "GET /" + self.path + self.httpRequest + "Host " + self.host_name + ":" + self.port_number + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
+	self.request = "GET /" + self.path + self.httpRequest + "Host " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
 	sock = self.connect(self.host_name, self.port_number)
 	sock.sendall(self.request)
 	self.response = self.recvall(sock)
 	
 
-        code = 500
-        body = ""
+        code = self.get_code(self.response)
+        body = self.get_body(self.response)
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
