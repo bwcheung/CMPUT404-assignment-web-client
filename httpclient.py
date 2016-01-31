@@ -57,7 +57,7 @@ class HTTPClient(object):
 	if (self.url_parse.group(2) is None):
 		raise Exception("invalid url")
 	else:
-		self.host_name = url_parse.group(2)
+		self.host_name = self.url_parse.group(2)
 	return self.host_name
 
     def connect(self, host, port):
