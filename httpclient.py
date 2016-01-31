@@ -35,13 +35,13 @@ class HTTPResponse(object):
 class HTTPClient(object):
 	
     
-    httpRequest = "http/1.1 \r\n"
+    httpRequest = " HTTP/1.1 \r\n"
     user = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0\r\n"
     accept = "Accept: text/html,application/xhtml+xml,application/xml,application/json\r\n"
     accept_lan = "Accept-Language: en-US,en;q=0.5\r\n"
-    connection = "close\r\n"
+    connection = "Connection: close\r\n"
     content_len = "Content-Length: "
-    conetent_type = "Content-Type: application/x-www-form-urlencoded,application/json"
+    conetent_type = "Content-Type: application/x-www-form-urlencoded,application/json; \r\n"
 
     def get_host_port(self,url):
 	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
@@ -71,22 +71,22 @@ class HTTPClient(object):
     def connect(self, host, port):
         # use sockets!
 	ClientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	ClientSocket.connect((host, port))
+	ClientSocket.connect(("127.0.0.1", 8080))
         return ClientSocket
 
     def get_code(self, data):
-        sections = data.split('\r\n\r\n')
-        header_lines = str.splitlines(sections[0])
+        lines = data.split('\r\n\r\n')
+        header_lines = str.splitlines(lines[0])
         http_line = header_lines[0].split()
         return int(http_line[1])
 
     def get_headers(self,data):
-        sections = data.split('\r\n\r\n')
-        return sections[0]
+        lines = data.split('\r\n\r\n')
+        return lines[0]
 
     def get_body(self, data):
-        sections = data.split('\r\n\r\n')
-        return sections[1]
+        lines = data.split('\r\n\r\n')
+        return lines[1]
 
     # read everything from the socket
     def recvall(self, sock):
@@ -106,7 +106,7 @@ class HTTPClient(object):
 	self.port_number = self.get_host_port(url)
 	self.path = self.get_path(url)
 
-	self.request = "GET /" + self.path + self.httpRequest + "Host " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
+	self.request = "GET /" + self.path + self.httpRequest + "HOST: " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
 	sock = self.connect(self.host_name, self.port_number)
 	sock.sendall(self.request)
 	self.response = self.recvall(sock)
@@ -114,11 +114,31 @@ class HTTPClient(object):
 
         code = self.get_code(self.response)
         body = self.get_body(self.response)
+	
+	print(self.response)
+
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
-        code = 500
-        body = ""
+        self.host_name = self.get_host(url)
+	self.port_number = self.get_host_port(url)
+	self.path = self.get_path(url)
+
+	if(args):
+            self.post_arg = urllib.urlencode(args)
+
+	self.request = "POST " + self.path + self.httpRequest + "HOST: " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
+	self.request = self.request + self.content_type + self.content_len + str(len(self.post_arg)) + "\r\n\r\n" + self.post_arg
+	sock = self.connect(self.host_name, self.port_number)
+	sock.sendall(self.request)
+	self.response = self.recvall(sock)
+	
+
+        code = self.get_code(self.response)
+        body = self.get_body(self.response)
+
+	print(self.response)
+
         return HTTPResponse(code, body)
 
     def command(self, url, command="GET", args=None):
