@@ -124,7 +124,7 @@ class HTTPClient(object):
 	self.port_number = self.get_host_port(url)
 	self.path = self.get_path(url)
 
-        post_arg = ""
+        self.post_arg = ""
 	if(args):
             self.post_arg = urllib.urlencode(args)
 
