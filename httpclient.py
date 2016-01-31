@@ -71,7 +71,7 @@ class HTTPClient(object):
     def connect(self, host, port):
         # use sockets!
 	ClientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	ClientSocket.connect(("127.0.0.1", 8080))
+	ClientSocket.connect((host, port))
         return ClientSocket
 
     def get_code(self, data):
