@@ -43,14 +43,14 @@ class HTTPClient(object):
     connection = "close\r\n"
     content_len = "Content-Length: "
     conetent_type = "Content-Type: application/x-www-form-urlencoded,application/json"
-    
-    url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$")
 
     def get_host_port(self,url):
+	url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
 	return None
 
     def get_host(self,url):
-	host_name = url_parse[2]
+	url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
+	host_name = url_parse.group[2]
 	return host_name
 
     def connect(self, host, port):
