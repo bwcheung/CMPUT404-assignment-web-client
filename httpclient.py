@@ -41,7 +41,7 @@ class HTTPClient(object):
     accept_lan = "Accept-Language: en-US,en;q=0.5\r\n"
     connection = "Connection: close\r\n"
     content_len = "Content-Length: "
-    conetent_type = "Content-Type: application/x-www-form-urlencoded,application/json; \r\n"
+    content_type = "Content-Type: application/x-www-form-urlencoded,application/json; \r\n"
 
     def get_host_port(self,url):
 	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
