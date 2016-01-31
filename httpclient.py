@@ -33,13 +33,25 @@ class HTTPResponse(object):
         self.body = body
 
 class HTTPClient(object):
+	
+    
+    request = "http/1.1 "
+    host = "Host: "
+    user = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0\r\n"
+    accept = "Accept: text/html,application/xhtml+xml,application/xml,application/json\r\n"
+    accept_lan = "Accept-Language: en-US,en;q=0.5\r\n"
+    connection = "close\r\n"
+    content_len = "Content-Length: "
+    conetent_type = "Content-Type: application/x-www-form-urlencoded,application/json"
+    
+    url_parse = re.search(^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$)
 
     def get_host_port(self,url):
 	return None
 
     def get_host(self,url):
-	
-	return None	
+	host_name = url_parse[2]
+	return host_name
 
     def connect(self, host, port):
         # use sockets!
@@ -89,13 +101,13 @@ if __name__ == "__main__":
     client = HTTPClient()
     command = "GET"
     host = client.get_host(sys.argv[2])
-    port = client.get_host_port(sys.argv[2])
-    client.connect(host, port)
-    response = client.recvall(sock)
+    #port = client.get_host_port(sys.argv[2])
+    #client.connect(host, port)
+    #response = client.recvall(sock)
     if (len(sys.argv) <= 1):
         help()
         sys.exit(1)
     elif (len(sys.argv) == 3):
-        print client.command( sys.argv[1], sys.argv[2] )
+        print client.command( sys.argv[2], sys.argv[1] )
     else:
-        print client.command( command, sys.argv[1] )    
+        print client.command( sys.argv[1] )    
