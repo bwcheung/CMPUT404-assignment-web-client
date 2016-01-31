@@ -36,7 +36,7 @@ class HTTPClient(object):
 	
     
     request = "http/1.1 "
-    host = "Host: "
+    hostName = "Host: "
     user = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0\r\n"
     accept = "Accept: text/html,application/xhtml+xml,application/xml,application/json\r\n"
     accept_lan = "Accept-Language: en-US,en;q=0.5\r\n"
@@ -45,19 +45,23 @@ class HTTPClient(object):
     conetent_type = "Content-Type: application/x-www-form-urlencoded,application/json"
 
     def get_host_port(self,url):
-	url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
-	return None
+	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
+	if (url_parse.group(3) is None):
+		self.port_number = 80
+	else:
+		self.port_number = int(url_parse.group(3)[1:])
+	return self.port_number
 
     def get_host(self,url):
 	url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
-	host_name = url_parse.group[2]
-	return host_name
+	self.host_name = url_parse.group(2)
+	return self.host_name
 
     def connect(self, host, port):
         # use sockets!
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect((host, port))
-        return s
+	ClientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	ClientSocket.connect((host, port))
+        return ClientSocket
 
     def get_code(self, data):
         return None
@@ -101,8 +105,8 @@ if __name__ == "__main__":
     client = HTTPClient()
     command = "GET"
     host = client.get_host(sys.argv[2])
-    #port = client.get_host_port(sys.argv[2])
-    #client.connect(host, port)
+    port = client.get_host_port(sys.argv[2])
+    client.connect(host, port)
     #response = client.recvall(sock)
     if (len(sys.argv) <= 1):
         help()
