@@ -46,15 +46,18 @@ class HTTPClient(object):
 
     def get_host_port(self,url):
 	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
-	if (url_parse.group(3) is None):
+	if (self.url_parse.group(3) is None):
 		self.port_number = 80
 	else:
 		self.port_number = int(url_parse.group(3)[1:])
 	return self.port_number
 
     def get_host(self,url):
-	url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
-	self.host_name = url_parse.group(2)
+	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
+	if (self.url_parse.group(2) is None):
+		raise Exception("invalid url")
+	else:
+		self.host_name = url_parse.group(2)
 	return self.host_name
 
     def connect(self, host, port):
@@ -106,6 +109,8 @@ if __name__ == "__main__":
     command = "GET"
     host = client.get_host(sys.argv[2])
     port = client.get_host_port(sys.argv[2])
+    print(host)
+    print(port)
     client.connect(host, port)
     #response = client.recvall(sock)
     if (len(sys.argv) <= 1):
