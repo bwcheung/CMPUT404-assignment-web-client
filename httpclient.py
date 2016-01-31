@@ -122,16 +122,9 @@ class HTTPClient(object):
         else:
             return self.GET( url, args )
     
-if __name__ == "__main__":
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+if __name__ == "__main__": 
     client = HTTPClient()
     command = "GET"
-    host = client.get_host(sys.argv[2])
-    port = client.get_host_port(sys.argv[2])
-    print(host)
-    print(port)
-    client.connect(host, port)
-    response = client.recvall(sock)
     if (len(sys.argv) <= 1):
         help()
         sys.exit(1)
