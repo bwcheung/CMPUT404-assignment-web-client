@@ -111,9 +111,9 @@ class HTTPClient(object):
 
 	self.request = "GET /" + self.path + self.httpRequest + "HOST: " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
 	print(self.request)
-	#sock = self.connect(self.host_name, self.port_number)
-	#sock.sendall(self.request)
-	#self.response = self.recvall(sock)
+	sock = self.connect(self.host_name, self.port_number)
+	sock.sendall(self.request)
+	self.response = self.recvall(sock)
 	
 
         code = self.get_code(self.response)
