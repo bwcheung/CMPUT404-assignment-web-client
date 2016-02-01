@@ -36,7 +36,7 @@ class HTTPClient(object):
 	
     
     httpRequest = " HTTP/1.1 \r\n"
-    user = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0\r\n"
+    user = "User-Agent: Mozilla/5.0 Chrome/48.0.2564.82 Safari/537.36\r\n"
     accept = "Accept: text/html,application/xhtml+xml,application/xml,application/json\r\n"
     accept_lan = "Accept-Language: en-US,en;q=0.5\r\n"
     connection = "Connection: close\r\n"
@@ -132,7 +132,7 @@ class HTTPClient(object):
 	if(args):
             self.post_arg = urllib.urlencode(args)
 
-	self.request = "POST " + self.path + self.httpRequest + "HOST: " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
+	self.request = "POST " + self.path + self.httpRequest + "HOST: " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection + "\r\n"
 	self.request = self.request + self.content_type + self.content_len + str(len(self.post_arg)) + "\r\n\r\n" + self.post_arg
 	sock = self.connect(self.host_name, self.port_number)
 	sock.sendall(self.request)
