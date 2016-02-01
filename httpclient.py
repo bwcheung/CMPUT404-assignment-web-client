@@ -44,7 +44,7 @@ class HTTPClient(object):
     content_type = "Content-Type: application/x-www-form-urlencoded,application/json; \r\n"
 
     def get_host_port(self,url):
-	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
+	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
 	if (self.url_parse.group(3) is None):
 		self.port_number = 80
 	else:
@@ -52,7 +52,7 @@ class HTTPClient(object):
 	return self.port_number
 
     def get_host(self,url):
-	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
+	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
 	if (self.url_parse.group(2) is None):
 		raise Exception("invalid url")
 	else:
@@ -60,7 +60,7 @@ class HTTPClient(object):
 	return self.host_name
 
     def get_path(self, url):
-	self.url_parse = re.search("^(http[s]?:\/\/)(\w+.\w+)([:]?\w+)?([\/]?.*)$", url)
+	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
 	if (self.url_parse.group(2) is None):
 		return None
 	else:
