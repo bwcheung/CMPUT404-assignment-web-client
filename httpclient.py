@@ -45,15 +45,15 @@ class HTTPClient(object):
 
     def get_host_port(self,url):
 	#regex based from http://stackoverflow.com/questions/27745/getting-parts-of-a-url-regex
-	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
-	if (self.url_parse.group(4) is None):
+	self.url_parse = re.search("^(http[s]?:\/\/)([^:\/]+)([:]?\w+)?([\/]?.*)$", url)
+	if (self.url_parse.group(3) is None):
 		self.port_number = 80
 	else:
-		self.port_number = int(self.url_parse.group(4)[1:])
+		self.port_number = int(self.url_parse.group(3)[1:])
 	return self.port_number
 
     def get_host(self,url):
-	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
+	self.url_parse = re.search("^(http[s]?:\/\/)([^:\/]+)([:]?\w+)?([\/]?.*)$", url)
 	if (self.url_parse.group(2) is None):
 		raise Exception("invalid url")
 	else:
@@ -61,11 +61,11 @@ class HTTPClient(object):
 	return self.host_name
 
     def get_path(self, url):
-	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
-	if (self.url_parse.group(6) is None):
+	self.url_parse = re.search("^(http[s]?:\/\/)([^:\/]+)([:]?\w+)?([\/]?.*)$", url)
+	if (self.url_parse.group(4) is None):
 		self.path = ""
 	else:
-		self.path = self.url_parse.group(6)
+		self.path = self.url_parse.group(4)
 	return self.path
 
 
