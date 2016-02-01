@@ -48,7 +48,7 @@ class HTTPClient(object):
 	if (self.url_parse.group(3) is None):
 		self.port_number = 80
 	else:
-		self.port_number = int(url_parse.group(3)[1:])
+		self.port_number = int(self.url_parse.group(3)[1:])
 	return self.port_number
 
     def get_host(self,url):
