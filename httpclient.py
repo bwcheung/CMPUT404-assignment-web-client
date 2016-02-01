@@ -61,7 +61,7 @@ class HTTPClient(object):
 
     def get_path(self, url):
 	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
-	if (self.url_parse.group(2) is None):
+	if (self.url_parse.group(6) is None):
 		self.path = ""
 	else:
 		self.path = self.url_parse.group(6)
@@ -105,6 +105,9 @@ class HTTPClient(object):
 	self.host_name = self.get_host(url)
 	self.port_number = self.get_host_port(url)
 	self.path = self.get_path(url)
+	print(self.host_name)
+	print(self.port_number)
+	print(self.path)
 
 	self.request = "GET /" + self.path + self.httpRequest + "HOST: " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
 	print(self.request)
