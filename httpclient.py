@@ -45,10 +45,10 @@ class HTTPClient(object):
 
     def get_host_port(self,url):
 	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
-	if (self.url_parse.group(3) is None):
+	if (self.url_parse.group(4) is None):
 		self.port_number = 80
 	else:
-		self.port_number = int(self.url_parse.group(3)[1:])
+		self.port_number = int(self.url_parse.group(4)[1:])
 	return self.port_number
 
     def get_host(self,url):
@@ -62,10 +62,10 @@ class HTTPClient(object):
     def get_path(self, url):
 	self.url_parse = re.search("^(http[s]?:\/\/)?(([^:\/])+)(:\d+)?($|\/)([^#?\s]+)?(.*?)?(#[\w\-]+)?$", url)
 	if (self.url_parse.group(2) is None):
-		return None
+		self.path = ""
 	else:
-		self.path = self.url_parse.group(4)
-		return self.path
+		self.path = self.url_parse.group(6)
+	return self.path
 
 
     def connect(self, host, port):
@@ -107,9 +107,10 @@ class HTTPClient(object):
 	self.path = self.get_path(url)
 
 	self.request = "GET /" + self.path + self.httpRequest + "HOST: " + self.host_name + ":" + str(self.port_number) + "\r\n" + self.user + self.accept + self.accept_lan + self.connection
-	sock = self.connect(self.host_name, self.port_number)
-	sock.sendall(self.request)
-	self.response = self.recvall(sock)
+	print(self.request)
+	#sock = self.connect(self.host_name, self.port_number)
+	#sock.sendall(self.request)
+	#self.response = self.recvall(sock)
 	
 
         code = self.get_code(self.response)
